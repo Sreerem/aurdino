@@ -1,0 +1,30 @@
+#include <RH_ASK.h>
+#include <SPI.h> 
+
+RH_ASK driver;
+String cmd;
+void setup()
+{
+    Serial.begin(9600); 
+    pinMode(12,OUTPUT);
+    if (!driver.init())
+        Serial.println("init failed");
+
+}
+
+void loop()
+{
+  while(Serial.available()==0){
+    // Wait for data from Python
+  }
+    // Read the input string until newline character '\n'
+    cmd =Serial.readStringUntil('\n');
+    // Convert the String to a const char pointer
+    const char *msg = cmd.c_str();
+    driver.send((uint8_t *)msg, strlen(msg));// Send the data
+    //Serial.println("send");
+    //Serial.write("message send")
+    driver.waitPacketSent();
+    delay(100);
+
+}
